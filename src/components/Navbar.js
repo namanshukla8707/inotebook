@@ -1,8 +1,13 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 const Navbar = () => {
   let location = useLocation();
+  const history = useNavigate();
+  const handleLogout = () => {
+    localStorage.removeItem("auth-token");
+    history("/login");
+  };
   return (
     <nav className="navbar navbar-expand-lg bg-dark navbar-dark">
       <div className="container-fluid">
@@ -44,17 +49,20 @@ const Navbar = () => {
               </Link>
             </li>
           </ul>
-          <form className="d-flex" role="search">
-            <input
-              className="form-control me-2"
-              type="search"
-              placeholder="Search"
-              aria-label="Search"
-            />
-            <button className="btn btn-outline-success" type="submit">
-              Search
+          {!localStorage.getItem("auth-token") ? (
+            <form className="d-flex" role="search">
+              <Link className="btn btn-primary mx-2" to="/login" type="button">
+                Login
+              </Link>
+              <Link className="btn btn-primary mx-2" to="/signup" type="button">
+                Signup
+              </Link>
+            </form>
+          ) : (
+            <button className="btn btn-primary mx-2" onClick={handleLogout}>
+              Logout
             </button>
-          </form>
+          )}
         </div>
       </div>
     </nav>
